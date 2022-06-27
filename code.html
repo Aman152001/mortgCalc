@@ -2,7 +2,7 @@
 <html lang="en" class="h-100">
 
 <head>
-    <title>App Name: A Coding Project by Aman Yadav</title>
+    <title>Mortgage Calculator: A Coding Project by Aman Yadav</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,7 +22,7 @@
 <!-- ==== Nav Section ==== -->
 <nav class="navbar navbar-expand-md navbar-light  fixed-top ">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">APP NAME</a>
+        <a class="navbar-brand" href="#">Mortgage Calculator</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -52,20 +52,98 @@
 <!-- ==== Main Section ==== -->
 <main class="flex-shrink-0">
     <div class="container py-4 px-4 mt-5">
-        <h2 class="border-1 border-bottom border-dark">The Coder For: App Name</h2>
+        <h2 class="border-1 border-bottom border-dark">The Code For: Mortgage Calculator</h2>
         <div class="row row-cols-1 row-cols-lg-2">
             <div class="col-lg-8">
                 <pre class="line-numbers"><code class="language-javascript">
-                    //Call Hello World with alert!
-function HelloWorld(){
-    alert("Hello World!");
-}
+                    //get values on btnCalculate press / controller
+                    function getValues() {
+                        //reset cols
+                       
+                    
+                        //collect & parse data
+                        let loanAmount = parseFloat(document.getElementById('loanAmount').value);
+                        let payments = parseFloat(document.getElementById('month').value);
+                        //allow for float later
+                        let rate = parseFloat(document.getElementById('rate').value);
+                    
+                        //validate data
+                    
+                        //pass data to calculate function
+                        let results = calculateLoan(loanAmount, payments, rate);
+                    
+                        //pass in calculations display data in table
+                        displayData(results);
+                    }
+                    
+                    //calculate amounts / logic
+                    function calculateLoan(loanAmount, payments, rate) {
+                    
+                        //object for months
+                        let resultsObject = {};
+                    
+                        //create variables
+                        let totalInterest = 0;
+                        let balance = loanAmount;
+                        let interestPayment = 0
+                        let principalPayment;
+                    
+                        //monthly calculations
+                        let monthlyPayment = parseFloat((loanAmount * (rate / 1200)) / (1 - (1 + (rate / 1200)) ** (-Math.abs(payments))));
+                    
+                        //string to store in html
+                        let htmlString = ""
+                    
+                        //loop through number of payments do calculations
+                        for (let i = 0; i <= payments; i++) {
+                            let month = i;
+                    
+                            interestPayment = parseFloat(balance * (rate / 1200));
+                            principalPayment = parseFloat(monthlyPayment - (balance * (rate / 1200)));
+                            totalInterest = parseFloat((totalInterest + interestPayment));
+                            totalInterest = parseFloat(totalInterest);
+                            balance -= principalPayment;
+                            balance = Math.abs(parseFloat(balance));
+                    
+                            //concatinate on to htmlString the results of the calculations
+                            htmlString += `<tr><td>${month+1}</td><td>${monthlyPayment.toFixed(2)}</td><td>${principalPayment.toFixed(2)}</td><td>${interestPayment.toFixed(2)}</td><td>${totalInterest.toFixed(2)}</td><td>${balance.toFixed(2)}</td></tr>`
+                        }
+                    
+                        let totalCost = loanAmount + totalInterest;
+                    
+                        // display calculated variables to proper positions while inside function
+                       
+                        resultsObject.monthlyPayment = usd(monthlyPayment);
+                        resultsObject.principalPayment = usd(principalPayment);
+                        resultsObject.totalInterest = usd(totalInterest);
+                        resultsObject.totalCost = usd(totalCost);
+                    
+                        resultsObject.htmlString = htmlString;
+                    
+                        //return results object
+                        return resultsObject;
+                    }
+                    
+                    //display the data in a table / view
+                    function displayData(resultsObject) {
+                        document.getElementById("monthlyPayment").innerHTML = resultsObject.monthlyPayment;
+                        document.getElementById("totalPrincipal").innerHTML = resultsObject.principalPayment;
+                        document.getElementById("totalInterest").innerHTML = resultsObject.totalInterest;
+                        document.getElementById("totalCost").innerHTML = resultsObject.totalCost;
+                        //creates table
+                        document.getElementById("results").innerHTML = resultsObject.htmlString;
+                    }
+                    
                 </code></pre>
             </div>
             <div class="col-lg-4">
-                <p> The Code is structure in one function.</p>
-                <h5>Hello World!</h5> 
-                <p> Hello world is function which displays an alert page page showing alert as hello world!</p>
+                <p> The Code is structure in three function.</p>
+                <h3 class="border-1 border-bottom border-primary">getValues</h3> 
+                <p> The function <b>getValues</b> takes all three parameter i.e. loan amount, months and rate from the page.</p>
+                <h3 class="border-1 border-bottom border-primary">Calculate Loan</h3> 
+                <p> The function <b>Calculate loan</b> takes all the parameter got from <b>getValues</b> function and use in calculating interest payment, principal amount, monthly payment and balance. It also stores in the resultsObject.</p>
+                <h3 class="border-1 border-bottom border-primary">displayData</h3> 
+                <p> The functinon <b>displayData</b> will display all the calculated values in form of a table rows and columns to the user.</p>
             </div>
         </div>
     </div>
